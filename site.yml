@@ -1,0 +1,27 @@
+---
+- hosts: webserver
+  gather_facts: no
+
+  pre_tasks:
+    - name: Waiting for connection
+      ansible.builtin.wait_for_connection:
+        timeout: 1800
+    - name: Gathering facts
+      setup:
+ 
+  tasks:
+
+    - name: Install apache2 webserver
+      become: yes
+      ansible.builtin.package:
+        name: apache2
+        state: latest
+
+    - name: Copy index.html file to remote
+      become: yes
+      ansible.builtin.copy:
+        src: /home/tobias/Documents/vagrant/ansible-tenta/index.html
+        dest: /var/www/html/index.html
+        owner: vagrant
+        group: vagrant
+        mode: '644'
